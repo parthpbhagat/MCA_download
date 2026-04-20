@@ -26,7 +26,7 @@ const inr = (n: number) =>
 export function BuyNowPanel({ companyName, cin }: { companyName: string; cin: string }) {
   const [orderFor, setOrderFor] = useState<(typeof ORDER_OPTIONS)[number]["value"]>("v2");
   const [quantity, setQuantity] = useState(1);
-  const { purchased, purchase } = usePurchase(cin);
+  const { purchased } = usePurchase(cin);
 
   const { rate, subTotal, gst, total } = useMemo(() => {
     const opt = ORDER_OPTIONS.find((o) => o.value === orderFor) ?? ORDER_OPTIONS[0];
@@ -36,20 +36,18 @@ export function BuyNowPanel({ companyName, cin }: { companyName: string; cin: st
   }, [orderFor, quantity]);
 
   const handleBuy = () => {
-    purchase();
-    toast.success("Payment successful (demo)", {
-      description: `${quantity} × ${ORDER_OPTIONS.find((o) => o.value === orderFor)?.label} for ${companyName} — ${inr(total)}. Data unlocked below.`,
-    });
+    const opt = ORDER_OPTIONS.find((o) => o.value === orderFor)?.label || "V2 Documents";
+    window.location.href = `/checkout/${cin}?name=${encodeURIComponent(companyName)}&type=${encodeURIComponent(opt)}`;
   };
 
   if (purchased) {
     return (
-      <div className="mt-6 rounded-xl border border-success/30 bg-success/10 p-4 shadow-[var(--shadow-card)]">
+      <div className="mt-6 rounded-xl border border-success/30 bg-success/10 p-6 shadow-[var(--shadow-card)]">
         <div className="flex items-center gap-2 text-success">
           <CheckCircle2 className="h-5 w-5" />
           <div>
             <div className="text-sm font-semibold">Data unlocked for {companyName}</div>
-            <div className="text-xs text-success/80">You have purchased access to this company's master data.</div>
+            <div className="text-xs text-success/80">You have successfully purchased access to this company master data.</div>
           </div>
         </div>
       </div>

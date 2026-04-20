@@ -1,9 +1,20 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
-import { Search, MapPin, Mail, ChevronRight, Loader2, Building2 } from "lucide-react";
+import { Search, MapPin, Mail, ChevronRight, Loader2, Building2, Layers } from "lucide-react";
 import { SiteHeader } from "@/components/site-chrome";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import { companiesApi } from "@/lib/api/companies";
 import type { Company } from "@/lib/types";
 
@@ -22,6 +33,9 @@ function DashboardPage() {
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [bulkCins, setBulkCins] = useState("");
+  const [isBulkSearching, setIsBulkSearching] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +73,43 @@ function DashboardPage() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleBulkSearch = async () => {
+    const cins = bulkCins.split(/[\s,]+/).filter(c => c.trim().length > 5);
+    if (cins.length === 0) {
+      toast.error("Please enter at least one valid CIN");
+      return;
+    }
+
+    setIsBulkSearching(true);
+    try {
+      const res = await fetch(`http://localhost:8000/api/bulk-lookup?cins=${cins.join(",")}`);
+      const data = await res.json();
+      
+      if (data && data.data) {
+        const found = data.data.filter((c: any) => !c.error && c.name !== "Not Found");
+        if (found.length === 0) {
+          toast.error("No companies found for the provided CINs");
+        } else {
+          toast.success(`Found ${found.length} companies!`);
+          // Navigate to checkout with multiple companies
+          // We'll use the first CIN as the main param and pass full list in state/storage
+          localStorage.setItem("bulk_checkout_companies", JSON.stringify(found));
+          navigate({ 
+            to: "/checkout/$cin", 
+            params: { cin: found[0].cin },
+            search: { name: found[0].name, bulk: "true" } as any
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Bulk lookup failed:", error);
+      toast.error("Failed to lookup CINs. Please try again.");
+    } finally {
+      setIsBulkSearching(false);
+      setIsBulkModalOpen(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
@@ -170,12 +221,51 @@ function DashboardPage() {
                  )}
               </form>
                 
-              <div className="mt-2 border border-border/60 rounded-md p-6 bg-white/50 dark:bg-card/50 delay-100 w-full max-w-6xl shadow-sm">
-                 <p className="text-foreground font-medium opacity-90 tracking-tight flex items-center justify-center gap-2">
-                    <Search className="h-4 w-4 text-primary" />
-                    Start typing to see live company suggestions pulled directly from Finanvo API.
-                 </p>
-              </div>
+              <div className="mt-2 border border-border/60 rounded-md p-6 bg-white/50 dark:bg-card/50 delay-100 w-full max-w-6xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                  <p className="text-foreground font-medium opacity-90 tracking-tight flex items-center gap-2">
+                     <Search className="h-4 w-4 text-primary" />
+                     Start typing to see live company suggestions pulled directly from Finanvo API.
+                  </p>
+                  
+                  <Dialog open={isBulkModalOpen} onOpenChange={setIsBulkModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="flex items-center gap-2 border-primary/20 hover:bg-primary/5">
+                        <Layers className="h-4 w-4 text-primary" />
+                        Bulk CIN Search
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Bulk CIN Search</DialogTitle>
+                        <DialogDescription>
+                          Enter multiple CIN numbers separated by commas or new lines.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        <Textarea 
+                          placeholder="L65190MH1994PLC080618&#10;U72200KA2000PTC026340"
+                          className="min-h-[200px] font-mono text-sm"
+                          value={bulkCins}
+                          onChange={(e) => setBulkCins(e.target.value)}
+                        />
+                      </div>
+                      <DialogFooter>
+                        <Button variant="ghost" onClick={() => setIsBulkModalOpen(false)}>Cancel</Button>
+                        <Button 
+                          onClick={handleBulkSearch} 
+                          disabled={isBulkSearching || !bulkCins.trim()}
+                        >
+                          {isBulkSearching ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Searching...
+                            </>
+                          ) : "Search & Checkout"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+               </div>
           </div>
         </div>
       </main>
@@ -198,7 +288,7 @@ function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-2">
                    <Mail className="h-4 w-4" />
-                   <span>Email:<span className="text-primary italic">null</span></span>
+                   <span>Email:<span className="text-primary italic ml-1">technowire@outlook.com</span></span>
                 </div>
               </div>
             </div>

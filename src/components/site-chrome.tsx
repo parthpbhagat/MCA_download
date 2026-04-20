@@ -32,76 +32,75 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        {isLoggedIn ? (
-          <nav className="hidden items-center gap-8 md:flex">
-            <Link
-              to="/dashboard"
-              activeProps={{ className: "text-primary" }}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Company
-            </Link>
-            <Link
-              to="/orders"
-              activeProps={{ className: "text-primary" }}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Orders
-            </Link>
-            <Link
-              to="/profile"
-              activeProps={{ className: "text-primary" }}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-destructive outline-none border-none bg-transparent cursor-pointer"
-            >
-              Log Out
-            </button>
-          </nav>
-        ) : (
-          <nav className="hidden items-center gap-10 md:flex">
-            <Link
-              to="/"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Home
-            </Link>
-            <Link
-              to="/pricing"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Pricing
-            </Link>
-            <a
-              href="/#faq"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              FAQ
-            </a>
-            <Link
-              to="/login"
-              className="rounded-md bg-[#3182ce] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#2b6cb0] hover:shadow-md"
-            >
-              Get Started
-            </Link>
-          </nav>
-        )}
+        <div className="flex flex-1 items-center justify-end gap-6">
+          {isLoggedIn ? (
+            <nav className="hidden items-center gap-8 md:flex">
+              <Link
+                to="/dashboard"
+                activeProps={{ className: "text-primary" }}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Company
+              </Link>
+              <Link
+                to="/orders"
+                activeProps={{ className: "text-primary" }}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Orders
+              </Link>
+              <Link
+                to="/profile"
+                activeProps={{ className: "text-primary" }}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Profile
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="group flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-600 outline-none cursor-pointer"
+              >
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-slate-500 transition-colors group-hover:bg-red-100 group-hover:text-red-600">
+                  <LogOut className="h-3 w-3" />
+                </div>
+                <span>Log Out</span>
+              </button>
+            </nav>
+          ) : (
+            <nav className="hidden items-center gap-8 md:flex">
+              <Link
+                to="/"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Home
+              </Link>
+              <Link
+                to="/pricing"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Pricing
+              </Link>
+              <a
+                href="/#faq"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                FAQ
+              </a>
+              <Link
+                to="/login"
+                className="rounded-md bg-[#3182ce] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#2b6cb0] hover:shadow-md ml-2"
+              >
+                Get Started
+              </Link>
+            </nav>
+          )}
 
-        <div className="flex items-center gap-4">
-          {/* Update Token button removed as requested */}
-          
           <button 
             className="md:hidden p-2 text-muted-foreground"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
-          
-          <ThemeToggle />
         </div>
       </div>
       

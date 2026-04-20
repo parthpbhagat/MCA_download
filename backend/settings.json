@@ -8,8 +8,15 @@
     ],
     "pricing": [
         {
-            "title": "Basic",
-            "price": "\u20b999",
+            "title": "Compony V2 Document",
+            "price": "153/compony",
+            "features": [
+                "1 Download"
+            ]
+        },
+        {
+            "title": "Compony V3 Document",
+            "price": "153/Compony",
             "features": [
                 "1 Download"
             ]

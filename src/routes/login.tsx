@@ -10,10 +10,10 @@ import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Sign In — MCAVault" },
-      { name: "description", content: "Sign in to MCAVault to search MCA master company data, directors and filings." },
+      { title: "Sign In — MCA Download" },
+      { name: "description", content: "Sign in to MCA Download to search MCA master company data, directors and filings." },
       { name: "robots", content: "noindex,nofollow" },
-      { property: "og:title", content: "Sign In — MCAVault" },
+      { property: "og:title", content: "Sign In — MCA Download" },
       { property: "og:description", content: "Sign in to access MCA company and director data." },
     ],
   }),

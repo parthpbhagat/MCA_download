@@ -5,13 +5,12 @@ const STORAGE_KEY = "mcavault-theme";
 
 export function applyInitialTheme() {
   if (typeof document === "undefined") return;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const isDark = stored ? stored === "dark" : prefersDark;
-  document.documentElement.classList.toggle("dark", isDark);
+  document.documentElement.classList.remove("dark");
+  localStorage.setItem(STORAGE_KEY, "light");
 }
 
 export function ThemeToggle() {
+  return null; // Feature Disabled by user request
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {

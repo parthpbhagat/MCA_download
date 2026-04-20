@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
@@ -10,6 +11,8 @@ import razorpay
 from pydantic import BaseModel
 
 load_dotenv()
+if not os.getenv("FINANVO_API_KEY"):
+    load_dotenv(".venv")
 
 app = FastAPI(title="MCA Data Hub API")
 
@@ -385,6 +388,43 @@ async def get_company_filings(cin: str):
             return response.json()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/bulk-lookup")
+async def bulk_lookup(cins: str = Query(...)):
+    import traceback
+    try:
+        cin_list = [c.strip() for c in cins.split(",") if c.strip()]
+        results = []
+        
+        async with httpx.AsyncClient() as client:
+            tasks = []
+            for cin in cin_list:
+                tasks.append(fetch_with_auth(client, f"{FINANVO_BASE_URL}/company/profile", {"CIN": cin}))
+            
+            responses = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            for i, response in enumerate(responses):
+                cin = cin_list[i]
+                if isinstance(response, Exception):
+                    results.append({"cin": cin, "name": "Error", "error": str(response)})
+                    continue
+                    
+                if response.status_code == 200:
+                    data = response.json()
+                    if isinstance(data, dict) and "data" in data:
+                        data = data["data"]
+                    
+                    results.append({
+                        "cin": cin,
+                        "name": data.get("name") or data.get("COMPANY_NAME") or data.get("companyName") or "Unknown",
+                        "status": data.get("status") or data.get("COMPANY_STATUS") or data.get("company_status") or "Active"
+                    })
+                else:
+                    results.append({"cin": cin, "name": "Not Found", "error": f"Status {response.status_code}"})
+                    
+        return {"data": results}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
 
 if __name__ == "__main__":
     import uvicorn

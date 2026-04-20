@@ -137,10 +137,14 @@ function PricingPage() {
                       {plan.title}
                     </h3>
     
-                    <div className={`flex items-start mb-2 ${isPrimary ? 'text-white' : ''}`}>
+                    <div className={`flex items-start mb-2 justify-center w-full ${isPrimary ? 'text-white' : ''}`}>
                       <span className={`${isPrimary ? 'text-white' : 'text-[#1d69d7]'} text-2xl font-medium mt-2`}>₹</span>
-                      <span className={`${isPrimary ? 'text-white' : 'text-[#1d69d7]'} text-7xl font-bold leading-none`}>{plan.price}</span>
-                      <span className={`${isPrimary ? 'text-white/70' : 'text-muted-foreground'} text-sm self-end mb-2 ml-1`}>/ company</span>
+                      <span className={`${isPrimary ? 'text-white' : 'text-[#1d69d7]'} text-6xl font-bold leading-none tracking-tight`}>
+                        {String(plan.price).replace(/[^0-9.]/g, '') || "0"}
+                      </span>
+                      <span className={`${isPrimary ? 'text-white/70' : 'text-muted-foreground'} text-sm self-end mb-2 ml-1`}>
+                        {String(plan.price).replace(/[0-9.₹]/g, '').trim() || '/ company'}
+                      </span>
                     </div>
     
                     <p className={`${isPrimary ? 'text-white/60' : 'text-muted-foreground'} text-xs font-medium mb-8`}>Including GST</p>

@@ -52,10 +52,11 @@ function HomePage() {
               charges, filings, and full master data — sourced from MCA21.
             </p>
 
-            {/* <form
+{/*
+            <form
               onSubmit={(e) => {
                 e.preventDefault();
-                navigate({ to: "/search", search: { q, status: undefined, state: undefined, page: 1 } });
+                navigate({ to: "/dashboard", search: { q } as any });
               }}
               className="mx-auto mt-8 flex max-w-2xl gap-2 rounded-lg bg-background/95 p-2 shadow-[var(--shadow-elegant)] backdrop-blur dark:bg-card/95 animate-fade-up opacity-0 delay-200"
             >
@@ -68,10 +69,11 @@ function HomePage() {
                   className="border-0 bg-transparent text-foreground shadow-none focus-visible:ring-0"
                 />
               </div>
-              <Button type="submit" size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <Button type="submit" size="lg" className="bg-primary text-white hover:bg-primary/90">
                 Search
               </Button>
-            </form> */}
+            </form>
+*/}
 
             <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4 animate-scale-in opacity-0 delay-300">
               <Stat label="Companies" value={formatNumber(mockAnalytics.totalCompanies)} />
