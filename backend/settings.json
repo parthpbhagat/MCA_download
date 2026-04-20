@@ -1,0 +1,24 @@
+{
+    "footerText": "(c) 2026 MCA Download. Admin Panel tested completely!",
+    "faq": [
+        {
+            "q": "What does the ZIP files contain?",
+            "a": "The ZIP file contains the PDFs for each company..."
+        }
+    ],
+    "pricing": [
+        {
+            "title": "Basic",
+            "price": "\u20b999",
+            "features": [
+                "1 Download"
+            ]
+        }
+    ],
+    "contactInfo": {
+        "email": "technowire@outlook.com",
+        "name": "Technowire DataScience Pvt. Ltd. ",
+        "phone": "+91 9624850607",
+        "address": " EIGHTEEN FLOOR,1815,BLOCK-B,NAVRATNA CORPORATE PARK, OPP.JAYANTILAL PARK BOPAL ROAD, AMBLI, GUJARAT, PIN: 380058, India"
+    }
+}
