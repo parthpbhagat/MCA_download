@@ -1,5 +1,5 @@
 {
-    "footerText": "(c) 2026 MCA Download. Admin Panel tested completely!",
+    "footerText": "(c) 2026 MCA Download.",
     "faq": [
         {
             "q": "What does the ZIP files contain?",
@@ -23,9 +23,13 @@
         }
     ],
     "contactInfo": {
-        "email": "technowire@outlook.com",
-        "name": "Technowire DataScience Pvt. Ltd. ",
+        "email": "support@mcadownload.com",
+        "name": "Technowire Data Science Limited ",
         "phone": "+91 9624850607",
         "address": " EIGHTEEN FLOOR,1815,BLOCK-B,NAVRATNA CORPORATE PARK, OPP.JAYANTILAL PARK BOPAL ROAD, AMBLI, GUJARAT, PIN: 380058, India"
+    },
+    "billing": {
+        "rate": 145,
+        "gstPercent": 18
     }
 }

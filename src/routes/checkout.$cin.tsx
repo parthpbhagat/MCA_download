@@ -53,6 +53,7 @@ function CheckoutPage() {
   const [description, setDescription] = useState("DOWN_DOCS");
   const [gstin, setGstin] = useState("");
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [billingSettings, setBillingSettings] = useState({ rate: 145.00, gstPercent: 18 });
 
   useEffect(() => {
     // Clean up bulk search to avoid re-populating on refresh
@@ -63,6 +64,15 @@ function CheckoutPage() {
     // Automatically set email/mobile if logged in
     setEmail(localStorage.getItem("profile_email") || localStorage.getItem("temp_login_email") || "customer@example.com");
     setMobile(localStorage.getItem("profile_mobile") || "");
+    // Fetch settings for billing
+    fetch("http://localhost:8000/api/settings")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.billing) {
+           setBillingSettings(data.billing);
+        }
+      })
+      .catch(err => console.error("Failed to load settings:", err));
   }, []);
 
   // Search logic
@@ -104,9 +114,10 @@ function CheckoutPage() {
 
   // Dynamic Calculation
   const quantity = companies.length;
-  const rate = 145.00;
+  const rate = billingSettings.rate;
   const subTotal = rate * quantity;
-  const gst = subTotal * 0.18;
+  const gstPercent = billingSettings.gstPercent;
+  const gst = subTotal * (gstPercent / 100);
   const total = subTotal + gst; 
 
   const loadRazorpay = () => {
@@ -186,7 +197,7 @@ function CheckoutPage() {
                   cin: company.cin,
                   item: orderFor,
                   date: new Date().toISOString(),
-                  amount: rate + (rate * 0.18), // individual cost
+                  amount: rate + (rate * (gstPercent / 100)), // individual cost
                   status: "Completed"
                 });
 
@@ -246,7 +257,7 @@ function CheckoutPage() {
       <SiteHeader />
       
       <main className="flex-1 flex justify-center py-12 px-4 w-full">
-        <div className="w-full max-w-5xl">
+        <div className="w-full">
           
           {/* Main Workspace matching user screenshot */}
           <div className="bg-white p-8 rounded shadow-sm border border-border/50">
@@ -423,7 +434,7 @@ function CheckoutPage() {
                      </div>
                      <div className="flex items-center">
                         <span className="w-[120px] text-right pr-4">GST :</span>
-                        <span className="flex-1 text-slate-800">18% (₹{gst.toFixed(2)})</span>
+                        <span className="flex-1 text-slate-800">({gstPercent}%) ₹{gst.toFixed(2)}</span>
                      </div>
                   </div>
                   

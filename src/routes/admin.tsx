@@ -165,6 +165,31 @@ function AdminPage() {
               ))}
             </div>
           </section>
+          
+          {/* BILLING SETTINGS */}
+          <section className="bg-card border border-border p-6 rounded-lg shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Billing / Document Pricing</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium mb-1 text-muted-foreground">Document Rate (₹)</label>
+                <Input
+                  type="number"
+                  value={settings.billing?.rate || 0}
+                  onChange={(e) => setSettings({ ...settings, billing: { ...settings.billing, rate: parseFloat(e.target.value) } })}
+                />
+                <p className="text-[11px] text-muted-foreground mt-1">Cost per individual company document</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-muted-foreground">GST Percentage (%)</label>
+                <Input
+                  type="number"
+                  value={settings.billing?.gstPercent || 0}
+                  onChange={(e) => setSettings({ ...settings, billing: { ...settings.billing, gstPercent: parseFloat(e.target.value) } })}
+                />
+                <p className="text-[11px] text-muted-foreground mt-1">Default 18% </p>
+              </div>
+            </div>
+          </section>
 
           {/* PRICING SETTINGS */}
           <section className="bg-card border border-border p-6 rounded-lg shadow-sm">

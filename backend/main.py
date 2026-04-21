@@ -91,7 +91,11 @@ def load_settings():
             ],
             "pricing": [
                 {"title": "Basic", "price": "₹99", "features": ["1 Download"]}
-            ]
+            ],
+            "billing": {
+                "rate": 145.00,
+                "gstPercent": 18
+            }
         }
     with open(SETTINGS_FILE, "r") as f:
         return json.load(f)
